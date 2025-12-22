@@ -1,0 +1,30 @@
+{
+    "name": "@deliberate/database",
+    "version": "0.0.1",
+    "type": "module",
+    "main": "./src/index.ts",
+    "types": "./src/index.ts",
+    "exports": {
+        ".": {
+            "types": "./src/index.ts",
+            "import": "./src/index.ts"
+        }
+    },
+    "sideEffects": false,
+    "license": "MIT",
+    "scripts": {
+        "build": "tsc",
+        "db:push": "prisma db push",
+        "db:studio": "prisma studio",
+        "generate": "prisma generate",
+        "postinstall": "prisma generate"
+    },
+    "devDependencies": {
+        "@types/node": "^25.0.3",
+        "prisma": "^6.1.0",
+        "typescript": "^5.7.2"
+    },
+    "dependencies": {
+        "@prisma/client": "^6.1.0"
+    }
+}

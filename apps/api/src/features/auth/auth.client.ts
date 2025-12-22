@@ -24,14 +24,18 @@ class AuthClient {
         return { data, error };
     }
 
-    async signOut() {
-        const { error } = await this.supabase.auth.signOut();
+    async signOut(token?: string) {
+        const { error } = await this.supabase.auth.signOut(token ? { scope: 'global' } : undefined);
         return { error };
     }
 
-    async getUser() {
-        const { data: { user } } = await this.supabase.auth.getUser();
-        return user;
+    async getUser(token?: string) {
+        if (token) {
+            const { data: { user }, error } = await this.supabase.auth.getUser(token);
+            return { data: { user }, error };
+        }
+        const { data: { user }, error } = await this.supabase.auth.getUser();
+        return { data: { user }, error };
     }
 }
 

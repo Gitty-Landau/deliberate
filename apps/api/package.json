@@ -10,6 +10,7 @@
         "start": "node dist/app.js"
     },
     "dependencies": {
+        "@deliberate/database": "workspace:*",
         "@deliberate/types": "workspace:*",
         "@supabase/supabase-js": "^2.89.0",
         "dotenv": "^17.2.3",

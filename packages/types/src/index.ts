@@ -1,3 +1,1 @@
-export type Hello = {
-    message: string;
-};
+export * from '@deliberate/database';
