@@ -6,7 +6,11 @@
   },
   "scripts": {
     "dev:web": "pnpm --filter web dev",
-    "dev:api": "pnpm --filter api dev"
+    "dev:api": "pnpm --filter api dev",
+    "dev": "pnpm --recursive --parallel dev",
+    "start": "pnpm --recursive --parallel start",
+    "start:web": "pnpm --filter web start",
+    "start:api": "pnpm --filter api start"
   },
   "devDependencies": {
     "typescript": "^5.0.0"
