@@ -1,0 +1,14 @@
+{
+  "name": "deliberate",
+  "private": true,
+  "engines": {
+    "node": "22.12.0"
+  },
+  "scripts": {
+    "dev:web": "pnpm --filter web dev",
+    "dev:api": "pnpm --filter api dev"
+  },
+  "devDependencies": {
+    "typescript": "^5.0.0"
+  }
+}
