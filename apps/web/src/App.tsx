@@ -1,13 +1,39 @@
-import { Button } from "@/components/ui/button"
+import { Routes, Route } from 'react-router-dom'
+import LoginPage from './features/auth/components/LoginPage'
+import SignupPage from './features/auth/components/SignupPage'
+import HomePage from './features/auth/components/HomePage'
+import ProtectedRoute from './features/auth/providers/ProtectedRoute'
+import PublicRoute from './features/auth/providers/PublicRoute'
 
-function App() {
-  return (
-    <div className="flex min-h-screen flex-col items-center justify-center bg-background text-foreground">
-      <h1 className="text-4xl font-bold mb-4">Deliberate</h1>
-      <p className="text-muted-foreground mb-8">Decision Tracking App</p>
-      <Button>Get Started</Button>
-    </div>
-  )
-}
+
+
+const App = () => (
+  <Routes>
+    <Route
+      path="/login"
+      element={
+        <PublicRoute>
+          <LoginPage />
+        </PublicRoute>
+      }
+    />
+    <Route
+      path="/signup"
+      element={
+        <PublicRoute>
+          <SignupPage />
+        </PublicRoute>
+      }
+    />
+    <Route
+      path="/"
+      element={
+        <ProtectedRoute>
+          <HomePage />
+        </ProtectedRoute>
+      }
+    />
+  </Routes>
+)
 
 export default App
