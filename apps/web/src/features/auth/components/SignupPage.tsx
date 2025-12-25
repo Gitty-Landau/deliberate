@@ -1,44 +1,52 @@
-import { useState } from 'react';
+import { useForm } from 'react-hook-form';
 import { Link, useNavigate } from 'react-router-dom';
+import { z } from 'zod';
+import { zodResolver } from '@hookform/resolvers/zod';
 import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
-import { Label } from '@/components/ui/label';
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
+import {
+    Form,
+    FormControl,
+    FormField,
+    FormItem,
+    FormLabel,
+    FormMessage,
+} from '@/components/ui/form';
+import { Input } from '@/components/ui/input';
 import authMutations from '../hooks/auth.mutations';
+
+const signupSchema = z.object({
+    email: z.string().email('Please enter a valid email address'),
+    password: z.string().min(6, 'Password must be at least 6 characters'),
+    confirmPassword: z.string()
+}).refine((data) => data.password === data.confirmPassword, {
+    message: "Passwords do not match",
+    path: ["confirmPassword"],
+});
+
+type SignupFormValues = z.infer<typeof signupSchema>;
 
 const SignupPage = () => {
     const navigate = useNavigate();
     const signup = authMutations.useSignup();
 
-    const [email, setEmail] = useState('');
-    const [password, setPassword] = useState('');
-    const [confirmPassword, setConfirmPassword] = useState('');
-    const [validationError, setValidationError] = useState('');
+    const form = useForm<SignupFormValues>({
+        resolver: zodResolver(signupSchema),
+        defaultValues: {
+            email: '',
+            password: '',
+            confirmPassword: '',
+        },
+    });
 
-
-    const handleSubmit = async (e: React.FormEvent) => {
-        e.preventDefault();
-        setValidationError('');
-
-        if (password !== confirmPassword) {
-            setValidationError('Passwords do not match');
-            return;
-        }
-
-        if (password.length < 6) {
-            setValidationError('Password must be at least 6 characters');
-            return;
-        }
-
+    const onSubmit = async (data: SignupFormValues) => {
         try {
-            await signup.mutateAsync({ email, password });
+            await signup.mutateAsync({ email: data.email, password: data.password });
             navigate('/');
-        } catch (error) {
+        } catch {
             // Error is handled by React Query
         }
     };
-
-    const error = validationError || signup.error?.message;
 
     return (
         <div className="flex min-h-screen items-center justify-center bg-background p-4">
@@ -49,73 +57,92 @@ const SignupPage = () => {
                         Enter your details to get started
                     </CardDescription>
                 </CardHeader>
-                <form onSubmit={handleSubmit}>
-                    <CardContent className="space-y-4">
-                        {error && (
-                            <div className="rounded-md bg-destructive/10 p-3 text-sm text-destructive">
-                                {error}
-                            </div>
-                        )}
-                        <div className="space-y-2">
-                            <Label htmlFor="email">Email</Label>
-                            <Input
-                                id="email"
-                                type="email"
-                                placeholder="you@example.com"
-                                value={email}
-                                onChange={(e) => setEmail(e.target.value)}
-                                required
-                                autoComplete="email"
+                <Form {...form}>
+                    <form onSubmit={form.handleSubmit(onSubmit)}>
+                        <CardContent className="space-y-4">
+                            {signup.error && (
+                                <div className="rounded-md bg-destructive/10 p-3 text-sm text-destructive">
+                                    {signup.error.message}
+                                </div>
+                            )}
+                            <FormField
+                                control={form.control}
+                                name="email"
+                                render={({ field }) => (
+                                    <FormItem>
+                                        <FormLabel>Email</FormLabel>
+                                        <FormControl>
+                                            <Input
+                                                placeholder="you@example.com"
+                                                type="email"
+                                                autoComplete="email"
+                                                {...field}
+                                            />
+                                        </FormControl>
+                                        <FormMessage />
+                                    </FormItem>
+                                )}
                             />
-                        </div>
-                        <div className="space-y-2">
-                            <Label htmlFor="password">Password</Label>
-                            <Input
-                                id="password"
-                                type="password"
-                                placeholder="••••••••"
-                                value={password}
-                                onChange={(e) => setPassword(e.target.value)}
-                                required
-                                autoComplete="new-password"
+                            <FormField
+                                control={form.control}
+                                name="password"
+                                render={({ field }) => (
+                                    <FormItem>
+                                        <FormLabel>Password</FormLabel>
+                                        <FormControl>
+                                            <Input
+                                                placeholder="••••••••"
+                                                type="password"
+                                                autoComplete="new-password"
+                                                {...field}
+                                            />
+                                        </FormControl>
+                                        <FormMessage />
+                                    </FormItem>
+                                )}
                             />
-                        </div>
-                        <div className="space-y-2">
-                            <Label htmlFor="confirmPassword">Confirm Password</Label>
-                            <Input
-                                id="confirmPassword"
-                                type="password"
-                                placeholder="••••••••"
-                                value={confirmPassword}
-                                onChange={(e) => setConfirmPassword(e.target.value)}
-                                required
-                                autoComplete="new-password"
+                            <FormField
+                                control={form.control}
+                                name="confirmPassword"
+                                render={({ field }) => (
+                                    <FormItem>
+                                        <FormLabel>Confirm Password</FormLabel>
+                                        <FormControl>
+                                            <Input
+                                                placeholder="••••••••"
+                                                type="password"
+                                                autoComplete="new-password"
+                                                {...field}
+                                            />
+                                        </FormControl>
+                                        <FormMessage />
+                                    </FormItem>
+                                )}
                             />
-                        </div>
-                    </CardContent>
-                    <CardFooter className="flex flex-col gap-4">
-                        <Button
-                            type="submit"
-                            className="w-full"
-                            disabled={signup.isPending}
-                        >
-                            {signup.isPending ? 'Creating account...' : 'Create account'}
-                        </Button>
-                        <p className="text-center text-sm text-muted-foreground">
-                            Already have an account?{' '}
-                            <Link
-                                to="/login"
-                                className="font-medium text-primary underline-offset-4 hover:underline"
+                        </CardContent>
+                        <CardFooter className="flex flex-col gap-4">
+                            <Button
+                                type="submit"
+                                className="w-full"
+                                disabled={signup.isPending}
                             >
-                                Sign in
-                            </Link>
-                        </p>
-                    </CardFooter>
-                </form>
+                                {signup.isPending ? 'Creating account...' : 'Create account'}
+                            </Button>
+                            <p className="text-center text-sm text-muted-foreground">
+                                Already have an account?{' '}
+                                <Link
+                                    to="/login"
+                                    className="font-medium text-primary underline-offset-4 hover:underline"
+                                >
+                                    Sign in
+                                </Link>
+                            </p>
+                        </CardFooter>
+                    </form>
+                </Form>
             </Card>
         </div>
     );
 }
-
 
 export default SignupPage
