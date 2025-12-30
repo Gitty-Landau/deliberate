@@ -4,19 +4,16 @@ import SignupPage from './features/auth/components/SignupPage'
 import HomePage from './features/auth/components/HomePage'
 import ProtectedRoute from './features/auth/providers/ProtectedRoute'
 import PublicRoute from './features/auth/providers/PublicRoute'
-import { ProtectedLayout } from "@/components/layout/protected-layout"
-import { PublicLayout } from "@/components/layout/public-layout"
+import RootLayout from './components/layout/RootLayout'
 
 const App = () => (
-  <div className="min-h-screen bg-background text-foreground font-sans antialiased">
-    <Routes>
+  <Routes>
+    <Route element={<RootLayout />}>
       <Route
         path="/login"
         element={
           <PublicRoute>
-            <PublicLayout>
-              <LoginPage />
-            </PublicLayout>
+            <LoginPage />
           </PublicRoute>
         }
       />
@@ -24,9 +21,7 @@ const App = () => (
         path="/signup"
         element={
           <PublicRoute>
-            <PublicLayout>
-              <SignupPage />
-            </PublicLayout>
+            <SignupPage />
           </PublicRoute>
         }
       />
@@ -34,14 +29,12 @@ const App = () => (
         path="/"
         element={
           <ProtectedRoute>
-            <ProtectedLayout>
-              <HomePage />
-            </ProtectedLayout>
+            <HomePage />
           </ProtectedRoute>
         }
       />
-    </Routes>
-  </div>
+    </Route>
+  </Routes>
 )
 
 export default App

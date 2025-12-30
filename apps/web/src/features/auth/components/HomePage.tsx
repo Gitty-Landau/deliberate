@@ -5,13 +5,12 @@ import authMutations from '../hooks/auth.mutations';
 
 const HomePage = () => {
     const { user } = useAuth();
-    const logout = authMutations.useLogout();
+    const { mutate: logout, isPending: isLogoutPending } = authMutations.useLogout();
     const navigate = useNavigate();
 
-    const handleLogout = async () => {
-        await logout.mutateAsync();
-        navigate('/login');
-    };
+    const handleLogout = () => logout(undefined, {
+        onSuccess: () => navigate('/login'),
+    });
 
     return (
         <div className="flex min-h-screen flex-col items-center justify-center bg-background text-foreground">
@@ -25,9 +24,9 @@ const HomePage = () => {
             <Button
                 onClick={handleLogout}
                 variant="outline"
-                disabled={logout.isPending}
+                disabled={isLogoutPending}
             >
-                {logout.isPending ? 'Signing out...' : 'Sign out'}
+                {isLogoutPending ? 'Signing out...' : 'Sign out'}
             </Button>
         </div>
     );

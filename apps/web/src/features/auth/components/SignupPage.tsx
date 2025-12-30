@@ -18,7 +18,7 @@ import type { SignupFormValues } from '@deliberate/types';
 
 const SignupPage = () => {
     const navigate = useNavigate();
-    const signup = authMutations.useSignup();
+    const { mutate: signup, error, isPending: isSignupPending } = authMutations.useSignup();
 
     const form = useForm<SignupFormValues>({
         resolver: zodResolver(signupSchema),
@@ -29,14 +29,9 @@ const SignupPage = () => {
         },
     });
 
-    const onSubmit = async (data: SignupFormValues) => {
-        try {
-            await signup.mutateAsync({ email: data.email, password: data.password });
-            navigate('/');
-        } catch {
-            // Error is handled by React Query
-        }
-    };
+    const onSubmit = (data: SignupFormValues) => signup({ email: data.email, password: data.password }, {
+        onSuccess: () => navigate('/'),
+    });
 
     return (
         <div className="flex min-h-screen items-center justify-center bg-background p-4">
@@ -48,11 +43,11 @@ const SignupPage = () => {
                     </CardDescription>
                 </CardHeader>
                 <Form {...form}>
-                    <form onSubmit={form.handleSubmit(onSubmit)}>
+                    <form onSubmit={form.handleSubmit(onSubmit)} className='flex flex-col gap-4'>
                         <CardContent className="space-y-4">
-                            {signup.error && (
+                            {error && (
                                 <div className="rounded-md bg-destructive/10 p-3 text-sm text-destructive">
-                                    {signup.error.message}
+                                    {error.message}
                                 </div>
                             )}
                             <FormField
@@ -114,9 +109,9 @@ const SignupPage = () => {
                             <Button
                                 type="submit"
                                 className="w-full"
-                                disabled={signup.isPending}
+                                disabled={isSignupPending}
                             >
-                                {signup.isPending ? 'Creating account...' : 'Create account'}
+                                {isSignupPending ? 'Creating account...' : 'Create account'}
                             </Button>
                             <p className="text-center text-sm text-muted-foreground">
                                 Already have an account?{' '}

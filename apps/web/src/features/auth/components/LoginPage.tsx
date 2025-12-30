@@ -19,7 +19,7 @@ import type { LoginFormValues } from '@deliberate/types';
 
 const LoginPage = () => {
     const navigate = useNavigate();
-    const login = authMutations.useLogin();
+    const { mutate: login, error, isPending: isLoginPending } = authMutations.useLogin();
 
     const form = useForm<LoginFormValues>({
         resolver: zodResolver(loginSchema),
@@ -29,14 +29,10 @@ const LoginPage = () => {
         },
     });
 
-    const onSubmit = async (data: LoginFormValues) => {
-        try {
-            await login.mutateAsync(data);
-            navigate('/');
-        } catch {
-            // Error is handled by React Query
-        }
-    };
+    const onSubmit = (data: LoginFormValues) => login(data, {
+        onSuccess: () => navigate('/'),
+    });
+
 
     return (
         <div className="flex min-h-screen items-center justify-center bg-background p-4">
@@ -48,11 +44,11 @@ const LoginPage = () => {
                     </CardDescription>
                 </CardHeader>
                 <Form {...form}>
-                    <form onSubmit={form.handleSubmit(onSubmit)}>
+                    <form onSubmit={form.handleSubmit(onSubmit)} className='flex flex-col gap-4'>
                         <CardContent className="space-y-4">
-                            {login.error && (
+                            {error && (
                                 <div className="rounded-md bg-destructive/10 p-3 text-sm text-destructive">
-                                    {login.error.message}
+                                    {error.message}
                                 </div>
                             )}
                             <FormField
@@ -96,9 +92,9 @@ const LoginPage = () => {
                             <Button
                                 type="submit"
                                 className="w-full"
-                                disabled={login.isPending}
+                                disabled={isLoginPending}
                             >
-                                {login.isPending ? 'Signing in...' : 'Sign in'}
+                                {isLoginPending ? 'Signing in...' : 'Sign in'}
                             </Button>
                             <p className="text-center text-sm text-muted-foreground">
                                 Don't have an account?{' '}
