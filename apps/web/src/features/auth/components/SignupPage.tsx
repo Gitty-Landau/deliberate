@@ -1,17 +1,13 @@
 import { useForm } from 'react-hook-form';
 import { Link, useNavigate } from 'react-router-dom';
 import { zodResolver } from '@hookform/resolvers/zod';
+import { UserPlus } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
 import {
     Form,
-    FormControl,
-    FormField,
-    FormItem,
-    FormLabel,
-    FormMessage,
 } from '@/components/ui/form';
-import { Input } from '@/components/ui/input';
+import AuthInput from '@/features/auth/components/AuthInput';
 import authMutations from '../hooks/auth.mutations';
 import { signupSchema } from '@deliberate/schemas';
 import type { SignupFormValues } from '@deliberate/types';
@@ -50,68 +46,39 @@ const SignupPage = () => {
                                     {error.message}
                                 </div>
                             )}
-                            <FormField
+                            <AuthInput
                                 control={form.control}
                                 name="email"
-                                render={({ field }) => (
-                                    <FormItem>
-                                        <FormLabel>Email</FormLabel>
-                                        <FormControl>
-                                            <Input
-                                                placeholder="you@example.com"
-                                                type="email"
-                                                autoComplete="email"
-                                                {...field}
-                                            />
-                                        </FormControl>
-                                        <FormMessage />
-                                    </FormItem>
-                                )}
+                                label="Email"
+                                placeholder="you@example.com"
+                                type="email"
+                                autoComplete="email"
                             />
-                            <FormField
+                            <AuthInput
                                 control={form.control}
                                 name="password"
-                                render={({ field }) => (
-                                    <FormItem>
-                                        <FormLabel>Password</FormLabel>
-                                        <FormControl>
-                                            <Input
-                                                placeholder="••••••••"
-                                                type="password"
-                                                autoComplete="new-password"
-                                                {...field}
-                                            />
-                                        </FormControl>
-                                        <FormMessage />
-                                    </FormItem>
-                                )}
+                                label="Password"
+                                placeholder="••••••••"
+                                type="password"
+                                autoComplete="new-password"
                             />
-                            <FormField
+                            <AuthInput
                                 control={form.control}
                                 name="confirmPassword"
-                                render={({ field }) => (
-                                    <FormItem>
-                                        <FormLabel>Confirm Password</FormLabel>
-                                        <FormControl>
-                                            <Input
-                                                placeholder="••••••••"
-                                                type="password"
-                                                autoComplete="new-password"
-                                                {...field}
-                                            />
-                                        </FormControl>
-                                        <FormMessage />
-                                    </FormItem>
-                                )}
+                                label="Confirm Password"
+                                placeholder="••••••••"
+                                type="password"
+                                autoComplete="new-password"
                             />
                         </CardContent>
                         <CardFooter className="flex flex-col gap-4">
                             <Button
                                 type="submit"
                                 className="w-full"
-                                disabled={isSignupPending}
+                                isLoading={isSignupPending}
+                                icon={<UserPlus className="mr-2 h-4 w-4" />}
                             >
-                                {isSignupPending ? 'Creating account...' : 'Create account'}
+                                Create account
                             </Button>
                             <p className="text-center text-sm text-muted-foreground">
                                 Already have an account?{' '}

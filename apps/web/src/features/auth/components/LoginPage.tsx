@@ -1,21 +1,16 @@
 import { useForm } from 'react-hook-form';
 import { Link, useNavigate } from 'react-router-dom';
 import { zodResolver } from '@hookform/resolvers/zod';
-
+import { LogIn } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
 import {
     Form,
-    FormControl,
-    FormField,
-    FormItem,
-    FormLabel,
-    FormMessage,
 } from '@/components/ui/form';
-import { Input } from '@/components/ui/input';
 import authMutations from '../hooks/auth.mutations';
 import { loginSchema } from '@deliberate/schemas';
 import type { LoginFormValues } from '@deliberate/types';
+import AuthInput from './AuthInput';
 
 const LoginPage = () => {
     const navigate = useNavigate();
@@ -51,50 +46,31 @@ const LoginPage = () => {
                                     {error.message}
                                 </div>
                             )}
-                            <FormField
+                            <AuthInput
                                 control={form.control}
                                 name="email"
-                                render={({ field }) => (
-                                    <FormItem>
-                                        <FormLabel>Email</FormLabel>
-                                        <FormControl>
-                                            <Input
-                                                placeholder="you@example.com"
-                                                type="email"
-                                                autoComplete="email"
-                                                {...field}
-                                            />
-                                        </FormControl>
-                                        <FormMessage />
-                                    </FormItem>
-                                )}
+                                label="Email"
+                                placeholder="you@example.com"
+                                type="email"
+                                autoComplete="email"
                             />
-                            <FormField
+                            <AuthInput
                                 control={form.control}
                                 name="password"
-                                render={({ field }) => (
-                                    <FormItem>
-                                        <FormLabel>Password</FormLabel>
-                                        <FormControl>
-                                            <Input
-                                                placeholder="••••••••"
-                                                type="password"
-                                                autoComplete="current-password"
-                                                {...field}
-                                            />
-                                        </FormControl>
-                                        <FormMessage />
-                                    </FormItem>
-                                )}
+                                label="Password"
+                                placeholder="••••••••"
+                                type="password"
+                                autoComplete="current-password"
                             />
                         </CardContent>
                         <CardFooter className="flex flex-col gap-4">
                             <Button
                                 type="submit"
                                 className="w-full"
-                                disabled={isLoginPending}
+                                isLoading={isLoginPending}
+                                icon={<LogIn className="mr-2 h-4 w-4" />}
                             >
-                                {isLoginPending ? 'Signing in...' : 'Sign in'}
+                                Sign in
                             </Button>
                             <p className="text-center text-sm text-muted-foreground">
                                 Don't have an account?{' '}

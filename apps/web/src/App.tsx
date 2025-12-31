@@ -2,6 +2,7 @@ import { Routes, Route } from 'react-router-dom'
 import LoginPage from './features/auth/components/LoginPage'
 import SignupPage from './features/auth/components/SignupPage'
 import HomePage from './features/auth/components/HomePage'
+import PreferencesPage from './features/user/components/PreferencesPage'
 import ProtectedRoute from './features/auth/providers/ProtectedRoute'
 import PublicRoute from './features/auth/providers/PublicRoute'
 import RootLayout from './components/layout/RootLayout'
@@ -30,6 +31,14 @@ const App = () => (
         element={
           <ProtectedRoute>
             <HomePage />
+          </ProtectedRoute>
+        }
+      />
+      <Route
+        path="/preferences"
+        element={
+          <ProtectedRoute>
+            <PreferencesPage />
           </ProtectedRoute>
         }
       />

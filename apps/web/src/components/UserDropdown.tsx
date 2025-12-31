@@ -10,6 +10,7 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import { useAuth } from "@/features/auth/providers/AuthProvider"
 import authMutations from "@/features/auth/hooks/auth.mutations"
 import { useNavigate } from "react-router-dom"
+import { LogOut, Settings } from "lucide-react"
 
 const UserDropdown = () => {
     const { user } = useAuth()
@@ -39,7 +40,13 @@ const UserDropdown = () => {
                     </p>
                 </DropdownMenuLabel>
                 <DropdownMenuSeparator />
+                <DropdownMenuItem onClick={() => navigate("/preferences")} className="cursor-pointer">
+                    <Settings className="mr-2 h-4 w-4" />
+                    Preferences
+                </DropdownMenuItem>
+                <DropdownMenuSeparator />
                 <DropdownMenuItem onClick={handleLogout} className="cursor-pointer">
+                    <LogOut className="mr-2 h-4 w-4" />
                     Log out
                 </DropdownMenuItem>
             </DropdownMenuContent>

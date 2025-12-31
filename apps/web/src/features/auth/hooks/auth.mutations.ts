@@ -1,16 +1,13 @@
 import supabase from '@/features/database/database.client';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
-
-interface AuthCredentials {
-    email: string;
-    password: string;
-}
+import { queryKeys } from '../constants/queryKeys';
+import { LoginFormValues } from '@deliberate/types';
 
 const useLogin = () => {
     const queryClient = useQueryClient();
 
     return useMutation({
-        mutationFn: async ({ email, password }: AuthCredentials) => {
+        mutationFn: async ({ email, password }: LoginFormValues) => {
             const { data, error } = await supabase.auth.signInWithPassword({
                 email,
                 password,
@@ -18,9 +15,7 @@ const useLogin = () => {
             if (error) throw error;
             return data;
         },
-        onSuccess: () => {
-            queryClient.invalidateQueries({ queryKey: ['session'] });
-        },
+        onSuccess: () => queryClient.invalidateQueries({ queryKey: queryKeys.session })
     });
 }
 
@@ -29,7 +24,7 @@ const useSignup = () => {
     const queryClient = useQueryClient();
 
     return useMutation({
-        mutationFn: async ({ email, password }: AuthCredentials) => {
+        mutationFn: async ({ email, password }: LoginFormValues) => {
             const { data, error } = await supabase.auth.signUp({
                 email,
                 password,
@@ -37,9 +32,7 @@ const useSignup = () => {
             if (error) throw error;
             return data;
         },
-        onSuccess: () => {
-            queryClient.invalidateQueries({ queryKey: ['session'] });
-        },
+        onSuccess: () => queryClient.invalidateQueries({ queryKey: queryKeys.session })
     });
 }
 
@@ -52,9 +45,20 @@ const useLogout = () => {
             const { error } = await supabase.auth.signOut();
             if (error) throw error;
         },
-        onSuccess: () => {
-            queryClient.invalidateQueries({ queryKey: ['session'] });
+        onSuccess: () => queryClient.invalidateQueries({ queryKey: queryKeys.session })
+    });
+}
+
+const useUpdateUser = () => {
+    const queryClient = useQueryClient();
+
+    return useMutation({
+        mutationFn: async (attributes: { email?: string; password?: string; data?: object }) => {
+            const { data, error } = await supabase.auth.updateUser(attributes);
+            if (error) throw error;
+            return data;
         },
+        onSuccess: () => queryClient.invalidateQueries({ queryKey: queryKeys.session })
     });
 }
 
@@ -64,4 +68,5 @@ export default {
     useLogin,
     useSignup,
     useLogout,
+    useUpdateUser,
 };
