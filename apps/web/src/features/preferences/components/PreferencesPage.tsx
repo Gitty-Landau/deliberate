@@ -4,16 +4,17 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Form } from '@/components/ui/form';
-import { useAuth } from '@/features/auth/providers/AuthProvider';
 import authMutations from '@/features/auth/hooks/auth.mutations';
 import { preferencesSchema } from '@deliberate/schemas';
 import type { PreferencesFormValues } from '@deliberate/types';
 import { toast } from 'sonner';
 import AuthInput from '@/features/auth/components/AuthInput';
 import { ShieldCheck, UserRound, Save } from 'lucide-react';
+import { useUser } from '@/features/auth/hooks/auth.queries';
 
 const PreferencesPage = () => {
-    const { user } = useAuth();
+    const { data } = useUser();
+    const user = data?.user;
     const { mutate: updateUser, isPending } = authMutations.useUpdateUser();
 
     const form = useForm<PreferencesFormValues>({
@@ -21,7 +22,6 @@ const PreferencesPage = () => {
         defaultValues: {
             fullName: '',
             email: '',
-            password: '',
         },
     });
 
@@ -30,7 +30,6 @@ const PreferencesPage = () => {
             form.reset({
                 fullName: user.user_metadata?.full_name || '',
                 email: user.email || '',
-                password: '',
             });
         }
     }, [user, form]);

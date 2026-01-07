@@ -7,13 +7,15 @@ import {
     DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
-import { useAuth } from "@/features/auth/providers/AuthProvider"
 import authMutations from "@/features/auth/hooks/auth.mutations"
 import { useNavigate } from "react-router-dom"
 import { LogOut, Settings } from "lucide-react"
+import { useUser } from "@/features/auth/hooks/auth.queries"
 
 const UserDropdown = () => {
-    const { user } = useAuth()
+    const { data } = useUser()
+    const user = data?.user
+
     const { mutate: logout } = authMutations.useLogout()
     const navigate = useNavigate()
 
@@ -29,12 +31,15 @@ const UserDropdown = () => {
         <DropdownMenu>
             <DropdownMenuTrigger className="outline-none cursor-pointer">
                 <Avatar>
-                    <AvatarImage src="" />
+                    <AvatarImage src={user.user_metadata?.avatar_url ?? ""} />
                     <AvatarFallback>{initials}</AvatarFallback>
                 </Avatar>
             </DropdownMenuTrigger>
             <DropdownMenuContent align="end">
-                <DropdownMenuLabel className="font-normal">
+                <DropdownMenuLabel className="font-normal flex flex-col gap-2">
+                    {user.user_metadata?.full_name && <p className="text-xs leading-none text-muted-foreground">
+                        {user.user_metadata.full_name}
+                    </p>}
                     <p className="text-xs leading-none text-muted-foreground">
                         {user.email}
                     </p>

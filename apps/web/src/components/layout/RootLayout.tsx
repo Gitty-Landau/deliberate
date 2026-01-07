@@ -1,6 +1,6 @@
 
 import { Outlet } from "react-router-dom"
-import Header from "../Header"
+import Header from "../header/Header"
 import { Toaster } from "@/components/ui/sonner"
 
 

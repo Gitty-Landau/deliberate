@@ -1,20 +1,12 @@
-import supabase from '@/features/database/database.client';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { queryKeys } from '../constants/queryKeys';
-import { LoginFormValues } from '@deliberate/types';
+import authServices from '../auth.services';
 
 const useLogin = () => {
     const queryClient = useQueryClient();
 
     return useMutation({
-        mutationFn: async ({ email, password }: LoginFormValues) => {
-            const { data, error } = await supabase.auth.signInWithPassword({
-                email,
-                password,
-            });
-            if (error) throw error;
-            return data;
-        },
+        mutationFn: authServices.signIn,
         onSuccess: () => queryClient.invalidateQueries({ queryKey: queryKeys.session })
     });
 }
@@ -24,14 +16,7 @@ const useSignup = () => {
     const queryClient = useQueryClient();
 
     return useMutation({
-        mutationFn: async ({ email, password }: LoginFormValues) => {
-            const { data, error } = await supabase.auth.signUp({
-                email,
-                password,
-            });
-            if (error) throw error;
-            return data;
-        },
+        mutationFn: authServices.signUp,
         onSuccess: () => queryClient.invalidateQueries({ queryKey: queryKeys.session })
     });
 }
@@ -41,10 +26,7 @@ const useLogout = () => {
     const queryClient = useQueryClient();
 
     return useMutation({
-        mutationFn: async () => {
-            const { error } = await supabase.auth.signOut();
-            if (error) throw error;
-        },
+        mutationFn: authServices.signOut,
         onSuccess: () => queryClient.invalidateQueries({ queryKey: queryKeys.session })
     });
 }
@@ -53,16 +35,10 @@ const useUpdateUser = () => {
     const queryClient = useQueryClient();
 
     return useMutation({
-        mutationFn: async (attributes: { email?: string; password?: string; data?: object }) => {
-            const { data, error } = await supabase.auth.updateUser(attributes);
-            if (error) throw error;
-            return data;
-        },
+        mutationFn: authServices.updateUser,
         onSuccess: () => queryClient.invalidateQueries({ queryKey: queryKeys.session })
     });
 }
-
-
 
 export default {
     useLogin,

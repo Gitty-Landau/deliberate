@@ -1,14 +1,14 @@
-import { useAuth } from "@/features/auth/providers/AuthProvider"
 import { Navigate } from "react-router-dom"
+import { useUser } from "../hooks/auth.queries"
 
 type Props = {
     children: React.ReactNode
 }
 
 const ProtectedRoute = ({ children }: Props) => {
-    const { user, loading } = useAuth()
+    const { data: user, isLoading } = useUser()
 
-    if (loading)
+    if (isLoading)
         return (
             <div className="flex min-h-screen items-center justify-center bg-background">
                 <div className="text-muted-foreground">Loading...</div>
