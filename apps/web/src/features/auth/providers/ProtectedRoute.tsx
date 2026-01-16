@@ -6,7 +6,7 @@ type Props = {
 }
 
 const ProtectedRoute = ({ children }: Props) => {
-    const { data: user, isLoading } = useUser()
+    const { data, isLoading } = useUser()
 
     if (isLoading)
         return (
@@ -15,7 +15,7 @@ const ProtectedRoute = ({ children }: Props) => {
             </div>
         )
 
-    if (!user)
+    if (!data?.user)
         return <Navigate to="/login" replace />
 
     return <>{children}</>

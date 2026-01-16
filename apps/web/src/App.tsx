@@ -1,46 +1,43 @@
+
 import { Routes, Route } from 'react-router-dom'
 import LoginPage from './features/auth/components/LoginPage'
 import SignupPage from './features/auth/components/SignupPage'
 import HomePage from './features/auth/components/HomePage'
 import PreferencesPage from './features/preferences/components/PreferencesPage'
-import ProtectedRoute from './features/auth/providers/ProtectedRoute'
-import PublicRoute from './features/auth/providers/PublicRoute'
+import DecisionForm from './features/decisions/components/DecisionForm'
+import DecisionsPage from './features/decisions/components/DecisionsPage'
 import RootLayout from './components/layout/RootLayout'
+import AuthLayout from './features/auth/providers/AuthLayout'
 
 const App = () => (
   <Routes>
-    <Route element={<RootLayout />}>
+    <Route element={<AuthLayout />}>
       <Route
         path="/login"
-        element={
-          <PublicRoute>
-            <LoginPage />
-          </PublicRoute>
-        }
+        element={<LoginPage />}
       />
       <Route
         path="/signup"
-        element={
-          <PublicRoute>
-            <SignupPage />
-          </PublicRoute>
-        }
+        element={<SignupPage />}
       />
+    </Route>
+
+    <Route element={<RootLayout />}>
       <Route
         path="/"
-        element={
-          <ProtectedRoute>
-            <HomePage />
-          </ProtectedRoute>
-        }
+        element={<HomePage />}
       />
       <Route
         path="/preferences"
-        element={
-          <ProtectedRoute>
-            <PreferencesPage />
-          </ProtectedRoute>
-        }
+        element={<PreferencesPage />}
+      />
+      <Route
+        path="/decisions/new"
+        element={<DecisionForm />}
+      />
+      <Route
+        path="/decisions"
+        element={<DecisionsPage />}
       />
     </Route>
   </Routes>
